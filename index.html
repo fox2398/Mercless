@@ -649,32 +649,32 @@ a{text-decoration:none;color:inherit}
     <h2 style="font-size: 22px; margin-bottom: 18px;">تسجيل دخول المسؤول</h2>
     
     <!-- صندوق تنبيه الخطأ الداخلي المخصص -->
-    <div id="foxRealAdminError" style="display: none; background: #7f1d1d; border: 1px solid #991b1b; color: #fca5a5; padding: 10px 15px; border-radius: 8px; font-size: 13px; margin-bottom: 15px; text-align: center; font-weight: bold;"></div>
+    <div id="adminErrorMsg" style="display: none; background: #7f1d1d; border: 1px solid #991b1b; color: #fca5a5; padding: 10px 15px; border-radius: 8px; font-size: 13px; margin-bottom: 15px; text-align: center; font-weight: bold;"></div>
 
     <div class="field" style="margin-bottom: 13px;">
       <label style="display: block; font-size: 11px; color: #7d8a99; margin-bottom: 6px;">أدخل كلمة مرور المسؤول:</label>
       <div style="position: relative;">
-        <input type="password" id="foxRealAdminInput" placeholder="••••••••" style="width: 100%; padding: 12px 13px; padding-left: 45px; background: #030508; border: 1px solid #1e2733; color: white; border-radius: 10px; font-family: inherit; outline: none;" onkeydown="if(event.key==='Enter') foxCheckAdminLogin()">
+        <input type="password" id="adminPasswordInput" placeholder="••••••••" style="width: 100%; padding: 12px 13px; padding-left: 45px; background: #030508; border: 1px solid #1e2733; color: white; border-radius: 10px; font-family: inherit; outline: none;" onkeydown="if(event.key==='Enter') submitAdminPassword()">
         <span onclick="togglePasswordVisibility()" style="position: absolute; left: 13px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #ffffff; font-size: 18px; user-select: none; display: flex; align-items: center; justify-content: center;">👁️</span>
       </div>
     </div>
     
     <div class="modalActions" style="display: flex; gap: 8px; margin-top: 18px;">
       <button onclick="cancelAdminLogin()" style="flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #222d3b; background: #121821; color: white; font-family: inherit; font-weight: 800; cursor: pointer;">إلغاء</button>
-      <button class="save" onclick="foxCheckAdminLogin()" style="flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #222d3b; background: #e0e1e3; color: #111; font-family: inherit; font-weight: 800; cursor: pointer;">دخول</button>
+      <button class="save" onclick="submitAdminPassword()" style="flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #222d3b; background: #e0e1e3; color: #111; font-family: inherit; font-weight: 800; cursor: pointer;">دخول</button>
     </div>
   </div>
 </div>
 
 <script>
-  function foxCheckAdminLogin() {
-    let errBox = document.getElementById("foxRealAdminError");
+  function submitAdminPassword() {
+    let errBox = document.getElementById("adminErrorMsg");
     let showErr = (msg) => {
       errBox.innerText = msg;
       errBox.style.display = "block";
     };
 
-    let passwordInput = document.getElementById("foxRealAdminInput").value;
+    let passwordInput = document.getElementById("adminPasswordInput").value;
     let realPassword = localStorage.getItem("admin_password") || "67126712";
 
     if (!passwordInput) {
@@ -687,12 +687,12 @@ a{text-decoration:none;color:inherit}
       return;
     }
 
-    // نجاح الدخول
+    // إذا كانت كلمة المرور صحيحة، نخفي الخطأ ونافذة تسجيل الدخول ونكمل الوظائف الأصلية
     errBox.style.display = "none";
     document.getElementById("authModal").style.display = "none";
     
-    // إذا عندك دالة قديمة تبي تشغلها بعد النجاح حطها هنا، مثلاً:
-    // openAdminPanel(); 
+    // ملاحظة: إذا كان كودك القديم يعتمد على دالة إضافية بعد النجاح، 
+    // تأكد أن الكود أو المتغيرات الخاصة بلوحة التحكم عندك تعمل هنا.
   }
 </script>
 
