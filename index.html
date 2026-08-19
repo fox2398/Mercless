@@ -660,22 +660,53 @@ a{text-decoration:none;color:inherit}
   </div>
 </div>
 
-<div class="modal" id="authModal">
-  <div class="box">
-    <h2 style="font-size: 22px; margin-bottom: 18px;">تسجيل دخول المسؤول</h2>
-    <div class="field" style="margin-bottom: 13px;">
-      <label style="display: block; font-size: 11px; color: #7d8a99; margin-bottom: 6px;">أدخل كلمة مرور المسؤول:</label>
-      <div style="position: relative;">
-        <input type="password" id="adminPasswordInput" placeholder="••••••••" style="width: 100%; padding: 12px 13px; padding-left: 45px; background: #030508; border: 1px solid #1e2733; color: white; border-radius: 10px; font-family: inherit; outline: none;" onkeydown="if(event.key==='Enter') submitAdminPassword()">
-        <span onclick="togglePasswordVisibility()" style="position: absolute; left: 13px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #ffffff; font-size: 18px; user-select: none; display: flex; align-items: center; justify-content: center;">👁️</span>
-      </div>
+<!-- نافذة تسجيل دخول المسؤول -->
+<div id="foxAdminLoginBox" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 999999; justify-content: center; align-items: center;">
+  <div style="width: 400px; background: #111827; border: 1px solid #1f2937; border-radius: 12px; padding: 25px; text-align: right; color: #ffffff; font-family: Tahoma, sans-serif;">
+    
+    <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 15px; color: #ffffff; text-align: right;">تسجيل دخول المسؤول</h2>
+    
+    <!-- صندوق تنبيه الأخطاء الداخلي المخصص -->
+    <div id="foxAdminErrorMsg" style="display: none; background: #7f1d1d; border: 1px solid #991b1b; color: #fca5a5; padding: 10px 15px; border-radius: 8px; font-size: 13px; margin-bottom: 15px; text-align: center; font-weight: bold;"></div>
+
+    <div style="margin-bottom: 20px;">
+      <label style="display: block; font-size: 12px; color: #9ca3af; margin-bottom: 5px;">أدخل كلمة مرور المسؤول:</label>
+      <input type="password" id="fox_admin_password" placeholder="••••••••" style="width: 100%; padding: 10px; background: #030712; border: 1px solid #1f2937; color: white; border-radius: 8px; box-sizing: border-box; outline: none;">
     </div>
-    <div class="modalActions" style="display: flex; gap: 8px; margin-top: 18px;">
-      <button onclick="cancelAdminLogin()" style="flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #222d3b; background: #121821; color: white; font-family: inherit; font-weight: 800; cursor: pointer;">إلغاء</button>
-      <button class="save" onclick="submitAdminPassword()" style="flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #222d3b; background: #e0e1e3; color: #111; font-family: inherit; font-weight: 800; cursor: pointer;">دخول</button>
+    
+    <div style="display: flex; gap: 10px;">
+      <button type="button" onclick="document.getElementById('foxAdminLoginBox').style.display='none';" style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #1f2937; background: #121821; color: white; font-weight: bold; cursor: pointer;">إلغاء</button>
+      <button type="button" onclick="foxSubmitAdminLogin()" style="flex: 1; padding: 10px; border-radius: 8px; border: none; background: #e0e1e3; color: #111111; font-weight: bold; cursor: pointer;">دخول</button>
     </div>
   </div>
 </div>
+
+<script>
+  function foxSubmitAdminLogin() {
+    let errBox = document.getElementById("foxAdminErrorMsg");
+    let showErr = (msg) => {
+      errBox.innerText = msg;
+      errBox.style.display = "block";
+    };
+
+    let enteredPass = document.getElementById("fox_admin_password").value;
+    let realPass = localStorage.getItem("admin_password") || "67126712";
+
+    if (!enteredPass) {
+      showErr("الرجاء إدخال كلمة المرور!");
+      return;
+    }
+
+    if (enteredPass !== realPass) {
+      showErr("كلمة المرور غير صحيحة!");
+      return;
+    }
+
+    // إذا كانت كلمة المرور صحيحة
+    document.getElementById("foxAdminLoginBox").style.display = "none";
+    // أضف هنا الكود الذي تبي تنفذه بعد نجاح تسجيل الدخول (مثل فتح لوحة التحكم أو الانتقال)
+  }
+</script>
 
 <script>
   // سكريبت تشغيل الفضاء المتحرك والشهب
