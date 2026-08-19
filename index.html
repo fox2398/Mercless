@@ -813,19 +813,23 @@ a{text-decoration:none;color:inherit}
     }
   }
 
-  window.submitAdminPassword = function() {
+window.submitAdminPassword = function() {
     let pass = document.getElementById("adminPasswordInput").value;
-    if (pass === "67126712") {
-      isAdmin = true;
-      document.getElementById("authModal").classList.remove("show");
-      updateAdminUI();
-    } else {
-      alert("كلمة المرور غير صحيحة!");
-      document.getElementById("adminPasswordInput").value = "";
-      document.getElementById("adminPasswordInput").focus();
-    }
-  }
+    
+    // جلب كلمة المرور المخزنة في المتصفح أو القيمة الافتراضية إذا لم تكن موجودة
+    let correctPass = localStorage.getItem("admin_password") || "67126712";
 
+    if (pass === correctPass) {
+        isAdmin = true;
+        document.getElementById("authModal").classList.remove("show");
+        document.getElementById("adminPasswordInput").value = ""; // تفريغ الحقل للأمان
+        updateAdminUI();
+    } else {
+        alert("كلمة المرور غير صحيحة!");
+        document.getElementById("adminPasswordInput").value = "";
+        document.getElementById("adminPasswordInput").focus();
+    }
+};
   window.cancelAdminLogin = function() {
     document.getElementById("authModal").classList.remove("show");
     window.location.href = window.location.pathname;
