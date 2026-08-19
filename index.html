@@ -1376,8 +1376,47 @@ a{text-decoration:none;color:inherit}
   </div>
 </div>
 
+<!-- نافذة تغيير كلمة المرور المستقلة (تظهر عبر ?fox65=true) -->
+<div class="modal" id="passwordChangeModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); justify-content: center; align-items: center; z-index: 9999;">
+  <div class="box" style="width: min(450px, 100%); background: #121821; border: 1px solid #1e2733; border-radius: 16px; padding: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.6); text-align: right; color: #fff; font-family: Tahoma, sans-serif; box-sizing: border-box;">
+    
+    <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 22px; color: #38bdf8; text-align: right;">تغيير كلمة المرور</h2>
+    
+    <!-- كلمة المرور الحالية -->
+    <div class="field" style="margin-bottom: 15px;">
+      <label style="display: block; font-size: 12px; color: #7d8a99; margin-bottom: 6px; text-align: right;">كلمة المرور الحالية:</label>
+      <div style="position: relative;">
+        <input type="password" id="currentPasswordInput" placeholder="••••••••" style="width: 100%; padding: 12px 14px; background: #030508; border: 1px solid #1e2733; color: white; border-radius: 10px; outline: none; box-sizing: border-box; font-family: inherit;">
+      </div>
+    </div>
+
+    <!-- كلمة المرور الجديدة -->
+    <div class="field" style="margin-bottom: 15px;">
+      <label style="display: block; font-size: 12px; color: #7d8a99; margin-bottom: 6px; text-align: right;">كلمة المرور الجديدة:</label>
+      <div style="position: relative;">
+        <input type="password" id="newPasswordInput" placeholder="••••••••" style="width: 100%; padding: 12px 14px; background: #030508; border: 1px solid #1e2733; color: white; border-radius: 10px; outline: none; box-sizing: border-box; font-family: inherit;">
+      </div>
+    </div>
+
+    <!-- تأكيد كلمة المرور -->
+    <div class="field" style="margin-bottom: 22px;">
+      <label style="display: block; font-size: 12px; color: #7d8a99; margin-bottom: 6px; text-align: right;">تأكيد كلمة المرور:</label>
+      <div style="position: relative;">
+        <input type="password" id="confirmPasswordInput" placeholder="••••••••" style="width: 100%; padding: 12px 14px; background: #030508; border: 1px solid #1e2733; color: white; border-radius: 10px; outline: none; box-sizing: border-box; font-family: inherit;">
+      </div>
+    </div>
+
+    <!-- الأزرار بنفس تصميم الموقع بالضبط -->
+    <div class="modalActions" style="display: flex; gap: 10px;">
+      <button onclick="closePasswordModal()" style="flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #1e2733; background: #121821; color: white; font-family: inherit; font-weight: bold; cursor: pointer; transition: 0.2s;">إلغاء</button>
+      <button onclick="submitNewPassword()" style="flex: 1; padding: 12px; border-radius: 10px; border: none; background: #38bdf8; color: #0b0f19; font-family: inherit; font-weight: bold; cursor: pointer; transition: 0.2s;">تحديث</button>
+    </div>
+
+  </div>
+</div>
+
 <script>
-  // فحص الرابط وإظهار النافذة المستقلة الخاصة بـ fox65 فقط
+  // فحص الرابط لتشغيل نافذة تغيير كلمة المرور عبر ?fox65=true فقط
   const siteUrlParams = new URLSearchParams(window.location.search);
   if (siteUrlParams.get('fox65') === 'true') {
     document.getElementById("passwordChangeModal").style.display = "flex";
@@ -1393,15 +1432,34 @@ a{text-decoration:none;color:inherit}
     let neu = document.getElementById("newPasswordInput").value;
     let con = document.getElementById("confirmPasswordInput").value;
 
+    // جلب الباسورد المخزن، أو استخدام الافتراضي (67126712) إذا لم يتم تغييره مسبقاً
+    let savedAdminPass = localStorage.getItem("admin_password") || "67126712";
+
     if (!cur || !neu || !con) {
       alert("الرجاء تعبئة جميع الحقول!");
       return;
     }
-    if (neu !== con) {
-      alert("كلمة المرور الجديدة غير متطابقة!");
+
+    // التحقق هل كلمة المرور الحالية مطابقة للقديمة
+    if (cur !== savedAdminPass) {
+      alert("كلمة المرور الحالية غير صحيحة!");
       return;
     }
-    alert("تم تغيير كلمة المرور بنجاح!");
+
+    if (neu !== con) {
+      alert("كلمة المرور الجديدة غير متطابقة مع التأكيد!");
+      return;
+    }
+
+    if (neu.length < 6) {
+      alert("يجب أن تكون كلمة المرور الجديدة 6 خانات على الأقل!");
+      return;
+    }
+
+    // حفظ كلمة المرور الجديدة في المتصفح لتعتمد في تسجيل دخول المسؤول
+    localStorage.setItem("admin_password", neu);
+
+    alert("تم تغيير كلمة المرور بنجاح! يمكنك الآن تسجيل الدخول بالكلمة الجديدة.");
     closePasswordModal();
   }
 </script>
