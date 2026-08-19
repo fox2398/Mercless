@@ -654,20 +654,20 @@ a{text-decoration:none;color:inherit}
     <div class="field" style="margin-bottom: 13px;">
       <label style="display: block; font-size: 11px; color: #7d8a99; margin-bottom: 6px;">أدخل كلمة مرور المسؤول:</label>
       <div style="position: relative;">
-        <input type="password" id="adminPasswordInput" placeholder="••••••••" style="width: 100%; padding: 12px 13px; padding-left: 45px; background: #030508; border: 1px solid #1e2733; color: white; border-radius: 10px; font-family: inherit; outline: none;" onkeydown="if(event.key==='Enter') submitAdminPassword()">
+        <input type="password" id="adminPasswordInput" placeholder="••••••••" style="width: 100%; padding: 12px 13px; padding-left: 45px; background: #030508; border: 1px solid #1e2733; color: white; border-radius: 10px; font-family: inherit; outline: none;" onkeydown="if(event.key==='Enter') submitFoxAdmin()">
         <span onclick="togglePasswordVisibility()" style="position: absolute; left: 13px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #ffffff; font-size: 18px; user-select: none; display: flex; align-items: center; justify-content: center;">👁️</span>
       </div>
     </div>
     
     <div class="modalActions" style="display: flex; gap: 8px; margin-top: 18px;">
       <button onclick="cancelAdminLogin()" style="flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #222d3b; background: #121821; color: white; font-family: inherit; font-weight: 800; cursor: pointer;">إلغاء</button>
-      <button class="save" onclick="submitAdminPassword()" style="flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #222d3b; background: #e0e1e3; color: #111; font-family: inherit; font-weight: 800; cursor: pointer;">دخول</button>
+      <button class="save" onclick="submitFoxAdmin()" style="flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #222d3b; background: #e0e1e3; color: #111; font-family: inherit; font-weight: 800; cursor: pointer;">دخول</button>
     </div>
   </div>
 </div>
 
 <script>
-  function submitAdminPassword() {
+  function submitFoxAdmin() {
     let errBox = document.getElementById("adminErrorMsg");
     let showErr = (msg) => {
       errBox.innerText = msg;
@@ -687,12 +687,12 @@ a{text-decoration:none;color:inherit}
       return;
     }
 
-    // إذا كانت كلمة المرور صحيحة، نخفي الخطأ ونافذة تسجيل الدخول ونكمل الوظائف الأصلية
+    // إذا كانت كلمة المرور صحيحة
     errBox.style.display = "none";
     document.getElementById("authModal").style.display = "none";
     
-    // ملاحظة: إذا كان كودك القديم يعتمد على دالة إضافية بعد النجاح، 
-    // تأكد أن الكود أو المتغيرات الخاصة بلوحة التحكم عندك تعمل هنا.
+    // إذا كان عندك الوظيفة القديمة (اللي كانت تشتغل بعد النجاح)، نادها هنا إذا كانت معرفة عندك:
+    // if (typeof openAdminPanel === 'function') { openAdminPanel(); }
   }
 </script>
 
