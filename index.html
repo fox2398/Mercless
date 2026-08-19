@@ -493,20 +493,113 @@ a{text-decoration:none;color:inherit}
   </div>
 </section>
 
-<!-- قسم مؤشر الماوس ومرر للأسفل -->
+<!-- قسم مؤشر الماوس ومرر للأسفل (تم تعديل المكان) -->
 <div class="scroll-indicator">
   <div class="mouse">
     <div class="wheel"></div>
   </div>
   <span>مرر للأسفل</span>
 </div>
-<section class="hero reveal" id="members">
-  <div>
-    <h1>Mercless</h1>
-    <p>سهلناها عليك</p>
-  </div>
-  <div class="count" id="count">0 أعضاء</div>
-</section>
+
+<!-- الدائرة التي تلحق الماوس -->
+<div class="cursor-follower"></div>
+
+<style>
+  /* تنسيق مؤشر الماوس - تم تعديل المكان ليصبح في أسفل الشاشة */
+  .scroll-indicator {
+    position: absolute; /* تم تغيير absolute إلى fixed ليظل ظاهراً */
+    bottom: 40px; /* المسافة من أسفل الشاشة */
+    left: 50%; /* توسيط أفقي */
+    transform: translateX(-50%); /* توسيط دقيق */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px; /* مسافة أكبر بين الأيقونة والنص */
+    color: #00bcd4; /* لون أزرق سماوي */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    z-index: 10;
+    pointer-events: none; /* عشان ما يعيق الضغط على العناصر اللي تحته */
+  }
+
+  .mouse {
+    width: 35px; /* تكبير حجم الماوس قليلاً */
+    height: 55px;
+    border: 3px solid #00bcd4;
+    border-radius: 25px;
+    position: relative;
+  }
+
+  .wheel {
+    width: 6px; /* تكبير حجم العجلة */
+    height: 12px;
+    background-color: #00bcd4;
+    border-radius: 3px;
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: scrollWheel 1.5s infinite;
+  }
+
+  @keyframes scrollWheel {
+    0% { top: 10px; opacity: 1; }
+    50% { top: 30px; opacity: 0; } /* الحركة تنزل وتختفي */
+    100% { top: 10px; opacity: 1; }
+  }
+
+  /* تنسيق الدائرة المتحركة التي تلحق الماوس */
+  .cursor-follower {
+    position: fixed;
+    width: 45px; /* حجم الدائرة */
+    height: 45px;
+    border: 2px solid rgba(0, 188, 212, 0.6);
+    border-radius: 50%;
+    pointer-events: none; /* عشان ما تغطي على الكلكات والأزرار */
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease-out, border-color 0.2s;
+    z-index: 9999;
+    box-shadow: 0 0 15px rgba(0, 188, 212, 0.3);
+    mix-blend-mode: screen; /* تأثير دمج لوني عشان يبان على الخلفية الغامقة */
+  }
+
+  /* تأثير عند تحريك الماوس فوق زر "الاعضاء" مثلاً */
+  body:has(button:hover) .cursor-follower {
+    width: 60px;
+    height: 60px;
+    border-color: #ff4081; /* تغيير لون الدائرة عند التفاعل */
+  }
+</style>
+
+<script>
+  // كود جافاسكريبت لجعل الدائرة تتبع حركة الماوس بسلاسة
+  const follower = document.querySelector('.cursor-follower');
+
+  let mouseX = 0;
+  let mouseY = 0;
+  let followerX = 0;
+  let followerY = 0;
+
+  window.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  function animate() {
+    // حركة سلسة (Easing) للحاق الدائرة بالماوس
+    // زيد الرقم 0.15 عشان تسرع اللحاق، أو قلله عشان تبطئه
+    followerX += (mouseX - followerX) * 0.15;
+    followerY += (mouseY - followerY) * 0.15;
+
+    follower.style.left = `${followerX}px`;
+    follower.style.top = `${followerY}px`;
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+</script>
 
 <section class="about-section reveal" id="about">
   <div class="about-image-card">
