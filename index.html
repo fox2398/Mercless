@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gang Merciless</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0;scroll-behavior:smooth}
+:root{
+  --bg:#030508;--card:#0b0f15;--line:#1a222d;--text:#f5f5f5;
+  --muted:#7d8a99;--accent:#a3b1c2;
+}
+body{
+  min-height:100vh;background:var(--bg);color:var(--text);
+  font-family:Cairo,Arial,sans-serif;overflow-x:hidden;
+  position:relative;
+}
+
+/* خلفية الفضاء والنجوم المتحركة */
+#space-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -3;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, #080c14 0%, #030508 100%);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+a{text-decoration:none;color:inherit}
+
+.nav{
+  position:sticky;top:0;z-index:20;height:82px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 4vw;background:rgba(3,5,8,0.65);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(255,255,255,.04);
+}
+.logo{font-weight:900;font-size:23px;letter-spacing:2px}
+.logo small{display:block;font-size:8px;letter-spacing:3px;color:#6b7685;text-align:center;margin-top:-4px}
+.navlinks{display:flex;gap:38px;color:#9aa3b0;font-size:14px;font-weight:700}
+.navlinks a{transition:.2s}.navlinks a:hover{color:white}
+.login{
+  border:0;border-radius:30px;padding:13px 24px;background:#d8d8da;
+  color:#101114;font-weight:900;cursor:pointer;font-family:inherit;
+}
+
+.top-hero {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 20px 40px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.top-hero-logo-circle {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: #0b0f15;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+  margin-bottom: 18px;
+}
+.top-hero-logo-circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.top-hero-sub {
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  color: #7d8a99;
+  margin-bottom: 25px;
+  font-weight: 700;
+}
+.top-hero-title {
+  font-size: clamp(38px, 6vw, 65px);
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 1px;
+  margin-bottom: 25px;
+}
+.top-hero-title span {
+  color: #a3b1c2;
+}
+
+.top-hero-desc {
+  font-size: 15px;
+  color: #8c97a4;
+  margin-bottom: 35px;
+  font-weight: 600;
+}
+
+.top-hero-buttons {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.hero-btn-primary {
+  background: #d8d8da;
+  color: #101114;
+  padding: 15px 35px;
+  border-radius: 99px;
+  font-family: inherit;
+  font-weight: 900;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+  border: none;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+.hero-btn-primary:hover {
+  background: #fff;
+  transform: translateY(-2px);
+}
+
+.hero{
+  max-width:1350px;margin:0 auto;padding:35px 4vw 25px;
+  display:flex;align-items:end;justify-content:space-between;
+}
+.hero h1{font-size:clamp(30px,4vw,50px);line-height:1;font-weight:900}
+.hero p{color:#737a84;margin-top:8px;font-size:14px}
+.count{
+  color:#737a84;font-size:13px;border:1px solid #1a222d;
+  padding:8px 14px;border-radius:99px;background:rgba(10,14,20,.65);
+}
+
+.about-section {
+  max-width: 1350px;
+  margin: 0 auto;
+  padding: 80px 4vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+}
+.about-image-card {
+  width: 360px;
+  height: 440px;
+  background: #0b0f15;
+  border: 1px solid #1a222d;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+  position: relative;
+  flex-shrink: 0;
+  transition: transform 0.5s ease;
+}
+.about-image-card:hover {
+  transform: scale(1.02);
+}
+.about-image-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.about-content {
+  flex: 1;
+  text-align: right;
+}
+.about-tag {
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: #6b7685;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+.about-content h2 {
+  font-size: clamp(30px, 4vw, 45px);
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 20px;
+}
+.about-content p {
+  color: #9aa3b0;
+  font-size: 15px;
+  line-height: 1.9;
+  margin-bottom: 30px;
+  max-width: 650px;
+}
+
+.apply-section {
+  max-width: 1350px;
+  margin: 0 auto;
+  padding: 40px 4vw 80px;
+}
+.apply-box {
+  background: rgba(11, 15, 21, 0.85);
+  backdrop-filter: blur(10px);
+  border: 1px solid #1a222d;
+  border-radius: 24px;
+  padding: 60px 40px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.apply-box h2 {
+  font-size: clamp(28px, 3.5vw, 40px);
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 15px;
+}
+.apply-box p {
+  color: #9aa3b0;
+  font-size: 15px;
+  line-height: 1.8;
+  max-width: 600px;
+  margin: 0 auto 35px;
+}
+.ticket-apply-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: #6c7886;
+  color: #ffffff;
+  padding: 16px 36px;
+  border-radius: 99px;
+  font-family: inherit;
+  font-weight: 900;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+  border: none;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+.ticket-apply-btn:hover {
+  background: #7d8a99;
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+}
+
+.members-container {
+  max-width: 1350px;
+  margin: 0 auto;
+  padding: 0 4vw 150px;
+}
+.section-block {
+  margin-bottom: 45px;
+}
+.section-divider-line {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.15), transparent);
+  margin: 40px 0 30px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.section-title-badge {
+  background: #0b0f15;
+  border: 1px solid #1a222d;
+  padding: 6px 16px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 1px;
+  position: absolute;
+  right: 0;
+  top: -14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+.section-title-badge span.icon-box {
+  background: #151c24;
+  border: 1px solid #222d3b;
+  color: #a3b1c2;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 11px;
+}
+
+.members{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px;
+  min-height: 120px;
+}
+
+.card{
+  min-height:395px;background:rgba(11, 15, 21, 0.85);backdrop-filter:blur(8px);
+  border:1px solid #1a222d;border-radius:18px;overflow:hidden;position:relative;
+  user-select: none;
+  transition:transform .3s cubic-bezier(0.16, 1, 0.3, 1),border-color .3s,box-shadow .3s;
+}
+.card.admin-mode { cursor: grab; }
+.card.admin-mode:active { cursor: grabbing; }
+.card:hover{transform:translateY(-8px);border-color:#3a4a5e;box-shadow:0 20px 50px rgba(0,0,0,.6)}
+
+.cover{
+  height:130px;position:relative;overflow:visible;
+  background: linear-gradient(135deg,#0e141c,#040609 65%,#131a24);
+  background-size: cover;
+  background-position: center;
+}
+
+.badge{
+  position:absolute;top:12px;left:12px;border:1px solid rgba(255,255,255,.15);
+  border-radius:99px;padding:4px 12px;font-size:11px;font-weight:900;color:#fff;
+  background:rgba(0,0,0,.6);backdrop-filter:blur(5px);
+}
+
+.avatar{
+  position:absolute;bottom:-45px;right:20px;width:95px;height:95px;border-radius:50%;
+  border:4px solid #0b0f15;background:#151c24;display:flex;align-items:center;
+  justify-content:center;overflow:hidden;box-shadow:0 6px 15px rgba(0,0,0,0.7);
+  z-index: 2;
+}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.initial{font-size:28px;font-weight:900;color:#fff}
+
+.info{padding:54px 20px 18px;text-align:right;}
+.name{font-size:18px;font-weight:900;color:#fff}
+.role{font-size:12px;color:#6b7685;margin-top:3px}
+.id-container{
+  display: flex; align-items: center; justify-content: space-between; margin-top: 22px;
+}
+.id{font-size:9px;color:#46505c;direction:ltr;cursor:pointer;transition:0.2s;}
+.id:hover{color:#fff;}
+.copy-btn{
+  background: none; border: 1px solid #1e2733; color: #7d8a99; font-size: 10px;
+  padding: 3px 8px; border-radius: 6px; cursor: pointer; font-family: inherit; transition: 0.2s;
+}
+.copy-btn:hover{background: #18222d; color: #fff;}
+
+.actions{position:absolute;left:15px;bottom:15px;display:flex;gap:6px;display:none} 
+.card.admin-mode .actions{display:flex} 
+
+.iconbtn{
+  width:30px;height:30px;border-radius:50%;border:1px solid #1e2733;background:#0d1218;
+  color:#aaa;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:0.2s;
+}
+.iconbtn:hover{background:#1c2733;color:#fff;}
+.empty{
+  grid-column:1/-1;text-align:center;padding:50px 20px;color:#666;
+  border:1px dashed #1e2733;border-radius:18px;font-size:13px;
+}
+.admin{
+  max-width:1350px;margin:0 auto;padding:0 4vw 25px;display:flex;justify-content:flex-start;align-items:center;
+}
+.add{
+  border:1px solid #2a3646;background:#0d1218;color:white;border-radius:12px;
+  padding:10px 17px;font-family:inherit;font-weight:800;cursor:pointer;display:none; 
+}
+
+.player{
+  position:fixed;bottom:0;left:0;right:0;height:76px;z-index:30;
+  background:rgba(4,6,10,.95);backdrop-filter:blur(18px);
+  border-top:1px solid #161e28;display:flex;align-items:center;gap:15px;padding:0 3vw;
+}
+.musicTitle{min-width:140px;font-size:11px;color:#9aa3b0}
+.player button{background:none;border:0;color:#ddd;font-size:18px;cursor:pointer}
+.play{
+  width:40px;height:40px;border-radius:50%!important;background:#e0e3e7!important;color:#101214!important;
+}
+.progress{height:4px;background:#1a222d;border-radius:9px;flex:1;cursor:pointer}
+.progress span{display:block;width:0;height:100%;background:var(--accent);border-radius:9px}
+
+.volume-container {
+  position: relative;
+  display: inline-block;
+}
+.volume-btn {
+  background: #000000 !important;
+  border: 1px solid #1e2733;
+  color: #fff;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+}
+.volume-dropdown {
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #06090f;
+  border: 1px solid #1e2733;
+  padding: 14px 8px;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  z-index: 40;
+}
+.volume-dropdown.show {
+  display: flex;
+}
+.vertical-slider-wrapper {
+  height: 105px;
+  width: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.volume-dropdown input[type="range"] {
+  width: 100px;
+  height: 5px;
+  transform: rotate(-90deg) scaleX(1);
+  accent-color: var(--accent);
+  background: #1a222d;
+  cursor: pointer;
+  border-radius: 5px;
+  outline: none;
+}
+
+.modal{
+  display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.78);
+  align-items:center;justify-content:center;padding:20px
+}
+.modal.show{display:flex}
+.box{
+  width:min(500px,100%);background:#0b0f15;border:1px solid #222d3b;border-radius:20px;
+  padding:25px;box-shadow:0 30px 100px rgba(0,0,0,.7)
+}
+.box h2{font-size:22px;margin-bottom:18px}
+.field{margin-bottom:13px}.field label{display:block;font-size:11px;color:#7d8a99;margin-bottom:6px}
+.field input{
+  width:100%;padding:12px 13px;background:#030508;border:1px solid #1e2733;
+  color:white;border-radius:10px;font-family:inherit;outline:none
+}
+.modalActions{display:flex;gap:8px;margin-top:18px}
+.modalActions button{flex:1;padding:12px;border-radius:10px;border:1px solid #222d3b;background:#121821;color:white;font-family:inherit;font-weight:800;cursor:pointer}
+.modalActions .save{background:#e0e1e3;color:#111;border-color:#e0e1e3}
+
+@media(max-width:900px){
+  .about-section{flex-direction:column;text-align:center;}
+  .about-content{display:flex;flex-direction:column;align-items:center;}
+}
+@media(max-width:1050px){.members{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:760px){
+  .nav{height:70px}.navlinks{display:none}.hero{padding-top:25px}.members{grid-template-columns:repeat(2,1fr);gap:13px}
+  .card{min-height:360px}.cover{height:120px}.musicTitle{display:none}
+}
+@media(max-width:480px){.members{grid-template-columns:1fr}.hero{display:block}.count{display:inline-block;margin-top:18px}}
+</style>
+</head>
+<body>
+
+<!-- عنصر خلفية الفضاء المتحرك والشهب -->
+<canvas id="space-canvas"></canvas>
+
+<header class="nav">
+  <div class="logo">Merciless<small>developer by Fox</small></div>
+  <nav class="navlinks">
+    <a href="#about">من نحن</a>
+    <a href="#members-list">الأعضاء</a>
+    <a href="#apply">التقديم</a>
+  </nav>
+  <a href="https://discord.gg/xrVee3qxXp" target="_blank" class="login">ادخل الآن</a>
+</header>
+
+<section class="top-hero reveal">
+  <div class="top-hero-logo-circle">
+    <img src="https://cdn.discordapp.com/attachments/1539238546127192154/1539305147895910460/ChatGPT_Image_18_2026_07_49_41_.png?ex=6a85d522&is=6a8483a2&hm=837608e5d0e9215756a3d0fe281b97d83a3cd26845d6f8519a5f9ab6313641d9&" alt="Logo">
+  </div>
+  <div class="top-hero-sub"> TRIGGERS SERVER </div>
+  <h1 class="top-hero-title"><span>Merciless</span> Gang</h1>
+  <div class="top-hero-desc">تعرف على لاعبين ومسؤولين العصابه</div>
+  <div class="top-hero-buttons">
+    <a href="#members-list" class="hero-btn-primary">الاعضاء</a>
+  </div>
+</section>
+
+<section class="hero reveal" id="members">
+  <div>
+    <h1>Mercless</h1>
+    <p>سهلناها عليك</p>
+  </div>
+  <div class="count" id="count">0 أعضاء</div>
+</section>
+
+<section class="about-section reveal" id="about">
+  <div class="about-image-card">
+    <img src="https://cdn.discordapp.com/attachments/1539238546127192154/1539305147895910460/ChatGPT_Image_18_2026_07_49_41_.png?ex=6a85d522&is=6a8483a2&hm=837608e5d0e9215756a3d0fe281b97d83a3cd26845d6f8519a5f9ab6313641d9&" alt="Mercless Logo">
+  </div>
+  <div class="about-content">
+    <div class="about-tag"> THE STORY </div>
+    <h2>Mercless Gang</h2>
+    <p>العصابة تتميز بالهيبة والقوة والترابط العالي بين أفرادها. تقوم على الولاء المطلق والاحترام والعمل الجماعي، حيث يحرص الجميع على حماية اسم العصابة ورفع سمعتها بكل أوقاتها. تتميز بالغموض والحضور المهيب، وتسعى دائمًا لأن يبقى اسمها محفوراً في القمة ومعروفاً للجميع.</p>
+  </div>
+</section>
+
+<section class="apply-section reveal" id="apply">
+  <div class="apply-box">
+    <h2>انضم إلى العصابة</h2>
+    <p>هل تملك المهارات والولاء الكافي لتكون جزءاً من فريقنا؟ انضم إلى سيرفر الديسكورد وافتح تكت تقديم وسنكون في انتظارك.</p>
+    <a href="https://discord.gg/xrVee3qxXp" target="_blank" class="ticket-apply-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.011c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+      فتح تكت التقديم في الديسكورد
+    </a>
+  </div>
+</section>
+
+<section class="admin reveal">
+  <button class="add" id="addBtn" onclick="openModal()">＋ إضافة عضو</button>
+</section>
+
+<div class="members-container reveal" id="members-list">
+  
+  <div class="section-block">
+    <div class="section-divider-line">
+      <div class="section-title-badge">Leader</div>
+    </div>
+    <div class="members" id="zone-leader" data-zone="leader"></div>
+  </div>
+
+  <div class="section-block">
+    <div class="section-divider-line">
+      <div class="section-title-badge">
+        Developers <span class="icon-box">&lt;/&gt;</span>
+      </div>
+    </div>
+    <div class="members" id="zone-developer" data-zone="developer"></div>
+  </div>
+
+  <div class="section-block">
+    <div class="section-divider-line">
+      <div class="section-title-badge">Manager</div>
+    </div>
+    <div class="members" id="zone-manager" data-zone="manager"></div>
+  </div>
+
+  <div class="section-block">
+    <div class="section-divider-line">
+      <div class="section-title-badge">Member</div>
+    </div>
+    <div class="members" id="zone-member" data-zone="member"></div>
+  </div>
+
+</div>
+
+<footer class="player">
+  <div class="musicTitle" id="musicTitle">Official Track</div>
+  <button onclick="prevSong()">⏮</button>
+  <button class="play" onclick="togglePlay()" id="play">▶</button>
+  <button onclick="nextSong()">⏭</button>
+  <div class="progress" onclick="seek(event)"><span id="progress"></span></div>
+  
+  <div class="volume-container">
+    <button class="volume-btn" onclick="toggleVolumeMenu()" title="التحكم في الصوت">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+    </button>
+    <div class="volume-dropdown" id="volumeDropdown">
+      <div class="vertical-slider-wrapper">
+        <input type="range" dir="ltr" id="volumeSlider" min="0" max="1" step="0.05" value="1" oninput="setVolume(this.value)">
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div class="modal" id="modal">
+  <div class="box">
+    <h2 id="modalTitle">إضافة عضو جديد</h2>
+    <input type="hidden" id="editId" value="">
+    <div class="field"><label>اسم العضو</label><input id="mName" placeholder="مثال: i Mish99"></div>
+    <div class="field"><label>الرتبة (Leader / Developer / Manager / Member)</label><input id="mRole" value="Member" placeholder="Leader"></div>
+    <div class="field"><label>رابط صورة البروفايل (Avatar)</label><input id="mImage" placeholder="اتركه فارغاً لافتراضي أو ضع رابط صحيح"></div>
+    <div class="field"><label>رابط البانر/الغلاف</label><input id="mCoverImg" placeholder="اتركه فارغاً لافتراضي أو ضع رابط صحيح"></div>
+    <div class="field"><label>رقم الأيدي (Discord ID)</label><input id="mDiscordId" placeholder="948249990189416478"></div>
+    <div class="modalActions">
+      <button onclick="closeModal()">إلغاء</button>
+      <button class="save" onclick="saveMember()">حفظ التغييرات</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="authModal">
+  <div class="box">
+    <h2 style="font-size: 22px; margin-bottom: 18px;">تسجيل دخول المسؤول</h2>
+    <div class="field" style="margin-bottom: 13px;">
+      <label style="display: block; font-size: 11px; color: #7d8a99; margin-bottom: 6px;">أدخل كلمة مرور المسؤول:</label>
+      <div style="position: relative;">
+        <input type="password" id="adminPasswordInput" placeholder="••••••••" style="width: 100%; padding: 12px 13px; padding-left: 45px; background: #030508; border: 1px solid #1e2733; color: white; border-radius: 10px; font-family: inherit; outline: none;" onkeydown="if(event.key==='Enter') submitAdminPassword()">
+        <span onclick="togglePasswordVisibility()" style="position: absolute; left: 13px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #ffffff; font-size: 18px; user-select: none; display: flex; align-items: center; justify-content: center;">👁️</span>
+      </div>
+    </div>
+    <div class="modalActions" style="display: flex; gap: 8px; margin-top: 18px;">
+      <button onclick="cancelAdminLogin()" style="flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #222d3b; background: #121821; color: white; font-family: inherit; font-weight: 800; cursor: pointer;">إلغاء</button>
+      <button class="save" onclick="submitAdminPassword()" style="flex: 1; padding: 12px; border-radius: 10px; border: 1px solid #222d3b; background: #e0e1e3; color: #111; font-family: inherit; font-weight: 800; cursor: pointer;">دخول</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // سكريبت تشغيل الفضاء المتحرك والشهب
+  const canvas = document.getElementById('space-canvas');
+  const ctx = canvas.getContext('2d');
+
+  let width, height;
+  let stars = [];
+  let shootingStars = [];
+
+  function resize() {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  // إنشاء النجوم الثابتة المتحركة ببطء
+  for (let i = 0; i < 150; i++) {
+    stars.push({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      radius: Math.random() * 1.5,
+      alpha: Math.random(),
+      speed: Math.random() * 0.05 + 0.01
+    });
+  }
+
+  // إنشاء الشهب المتحركة
+  function createShootingStar() {
+    shootingStars.push({
+      x: Math.random() * width,
+      y: 0,
+      length: Math.random() * 80 + 40,
+      speed: Math.random() * 10 + 6,
+      angle: Math.PI / 4, // زاوية الميلان
+      alpha: 1
+    });
+  }
+
+  setInterval(() => {
+    if (Math.random() < 0.7) {
+      createShootingStar();
+    }
+  }, 2000);
+
+  function animateSpace() {
+    ctx.clearRect(0, 0, width, height);
+
+    // رسم وتحديث النجوم
+    ctx.fillStyle = '#ffffff';
+    stars.forEach(star => {
+      ctx.globalAlpha = star.alpha;
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+      ctx.fill();
+
+      // وميض النجوم وحركتها البسيطة
+      star.alpha += star.speed * (Math.random() > 0.5 ? 1 : -1);
+      if (star.alpha > 1) star.alpha = 1;
+      if (star.alpha < 0.2) star.alpha = 0.2;
+    });
+
+    // رسم وتحديث الشهب
+    ctx.lineWidth = 2;
+    shootingStars.forEach((star, index) => {
+      ctx.globalAlpha = star.alpha;
+      let gradient = ctx.createLinearGradient(
+        star.x, star.y,
+        star.x - Math.cos(star.angle) * star.length,
+        star.y - Math.sin(star.angle) * star.length
+      );
+      gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+      gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+      ctx.strokeStyle = gradient;
+      ctx.beginPath();
+      ctx.moveTo(star.x, star.y);
+      ctx.lineTo(
+        star.x - Math.cos(star.angle) * star.length,
+        star.y - Math.sin(star.angle) * star.length
+      );
+      ctx.stroke();
+
+      star.x += Math.cos(star.angle) * star.speed;
+      star.y += Math.sin(star.angle) * star.speed;
+      star.alpha -= 0.015;
+
+      if (star.alpha <= 0 || star.x > width || star.y > height) {
+        shootingStars.splice(index, 1);
+      }
+    });
+
+    requestAnimationFrame(animateSpace);
+  }
+
+  animateSpace();
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyA10vp1Q-gUGyPlzgkmZtNoO_3Q7ErO2qQ",
+    authDomain: "mercless-d8831.firebaseapp.com",
+    projectId: "mercless-d8831",
+    storageBucket: "mercless-d8831.firebasestorage.app",
+    messagingSenderId: "1058675659782",
+    appId: "1:1058675659782:web:e2e6f362634a1b9c7edf87",
+    measurementId: "G-Z6D26QYQ6H"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  let members = [];
+  
+  const urlParams = new URLSearchParams(window.location.search);
+  let isAdmin = false;
+
+  if (urlParams.get('fox67') === 'true') {
+    document.getElementById("authModal").classList.add("show");
+    setTimeout(() => {
+      document.getElementById("adminPasswordInput").focus();
+    }, 100);
+  }
+
+  window.togglePasswordVisibility = function() {
+    const pwdInput = document.getElementById("adminPasswordInput");
+    if (pwdInput.type === "password") {
+      pwdInput.type = "text";
+    } else {
+      pwdInput.type = "password";
+    }
+  }
+
+  window.submitAdminPassword = function() {
+    let pass = document.getElementById("adminPasswordInput").value;
+    if (pass === "67126712") {
+      isAdmin = true;
+      document.getElementById("authModal").classList.remove("show");
+      updateAdminUI();
+    } else {
+      alert("كلمة المرور غير صحيحة!");
+      document.getElementById("adminPasswordInput").value = "";
+      document.getElementById("adminPasswordInput").focus();
+    }
+  }
+
+  window.cancelAdminLogin = function() {
+    document.getElementById("authModal").classList.remove("show");
+    window.location.href = window.location.pathname;
+  }
+
+  window.updateAdminUI = function() {
+    const addBtn = document.getElementById("addBtn");
+    if(addBtn) {
+      addBtn.style.display = isAdmin ? "block" : "none";
+    }
+    render();
+  }
+
+  async function fetchMembers() {
+    try {
+      const querySnapshot = await getDocs(collection(db, "members"));
+      members = [];
+      querySnapshot.forEach((docSnap) => {
+        let data = docSnap.data();
+        members.push({ 
+          id: docSnap.id, 
+          ...data,
+          zone: data.zone || getDefaultZone(data.role)
+        });
+      });
+      members.sort((a, b) => (a.order || 0) - (b.order || 0));
+      render();
+    } catch(err) {
+      console.error("خطأ في جلب البيانات:", err);
+    }
+  }
+
+  function getDefaultZone(role) {
+    let rLower = (role || "Member").toLowerCase();
+    if(rLower.includes('leader')) return 'leader';
+    if(rLower.includes('dev') || rLower.includes('مبرمج')) return 'developer';
+    if(rLower.includes('manager') || rLower.includes('مسؤول')) return 'manager';
+    return 'member';
+  }
+
+  function initials(name){return name.trim().split(/\s+/).map(x=>x[0]).slice(0,2).join("").toUpperCase();}
+
+  window.copyId = function(id, btn){
+    navigator.clipboard.writeText(id).then(() => {
+      let originalText = btn.textContent;
+      btn.textContent = "تم النسخ!";
+      setTimeout(() => { btn.textContent = originalText; }, 1500);
+    });
+  }
+
+  function render(){
+    document.getElementById("count").textContent = members.length + " أعضاء";
+    
+    const zones = {
+      leader: document.getElementById("zone-leader"),
+      developer: document.getElementById("zone-developer"),
+      manager: document.getElementById("zone-manager"),
+      member: document.getElementById("zone-member")
+    };
+
+    Object.values(zones).forEach(z => z.innerHTML = "");
+
+    if(!members.length){
+      zones.member.innerHTML = '<div class="empty">ما فيه أعضاء حاليًا.</div>';
+      return;
+    }
+    
+    members.forEach((m)=>{
+      const c = document.createElement("article");
+      c.className = "card" + (isAdmin ? " admin-mode" : "");
+      
+      if(isAdmin){
+        c.setAttribute("draggable", "true");
+      }
+      c.id = "card-" + m.id;
+      c.dataset.id = m.id;
+      
+      let coverStyle = m.coverImg ? `background-image:url('${escapeAttr(m.coverImg)}')` : '';
+      let dId = m.discordId || "832032968246951987";
+      let displayRole = m.role || "Member"; 
+      
+      c.innerHTML=`
+        <div class="cover" style="${coverStyle}">
+          <span class="badge">${escapeHtml(displayRole)}</span>
+          <div class="avatar">${m.image?`<img src="${escapeAttr(m.image)}" onerror="this.style.display='none'">`:`<span class="initial">${initials(m.name)}</span>`}</div>
+        </div>
+        <div class="info">
+          <div class="name">${escapeHtml(m.name)}</div>
+          <div class="role">${escapeHtml(displayRole)}</div>
+          <div class="id-container">
+            <div class="id">#${escapeHtml(dId)}</div>
+            <button class="copy-btn" onclick="copyId('${escapeAttr(dId)}', this)">نسخ الأيدي</button>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="iconbtn" onclick="openEditModal('${m.id}')" title="تعديل">✎</button>
+          <button class="iconbtn" onclick="removeMember('${m.id}')" title="حذف">×</button>
+        </div>`;
+
+      c.addEventListener('dragstart', (e) => {
+        if(!isAdmin) return;
+        e.dataTransfer.setData('text/plain', m.id);
+      });
+
+      let targetZone = zones[m.zone] ? zones[m.zone] : zones.member;
+      targetZone.appendChild(c);
+    });
+
+    Object.keys(zones).forEach(key => {
+      if(zones[key].children.length === 0) {
+        zones[key].innerHTML = '<div class="empty">لا توجد أعضاء في هذا القسم.</div>';
+      }
+    });
+
+    setupDragAndDrop();
+    initScrollReveal();
+  }
+
+  function setupDragAndDrop() {
+    const containers = document.querySelectorAll('.members');
+    containers.forEach(container => {
+      container.addEventListener('dragover', e => {
+        if(isAdmin) e.preventDefault();
+      });
+      
+      container.addEventListener('drop', async e => {
+        if(!isAdmin) return;
+        e.preventDefault();
+        const memberId = e.dataTransfer.getData('text/plain');
+        const newZone = container.dataset.zone;
+        
+        const draggedCard = document.getElementById("card-" + memberId);
+        if(draggedCard) {
+          const emptyMsg = container.querySelector('.empty');
+          if(emptyMsg) emptyMsg.remove();
+          
+          const afterElement = getDragAfterElement(container, e.clientY);
+          if (afterElement == null) {
+            container.appendChild(draggedCard);
+          } else {
+            container.insertBefore(draggedCard, afterElement);
+          }
+
+          await saveNewOrderAndZone(memberId, newZone, container);
+        }
+      });
+    });
+  }
+
+  function getDragAfterElement(container, y) {
+    const draggableElements = [...container.querySelectorAll('.card:not(.dragging)')];
+    return draggableElements.reduce((closest, child) => {
+      const box = child.getBoundingClientRect();
+      const offset = y - box.top - box.height / 2;
+      if (offset < 0 && offset > closest.offset) {
+        return { offset: offset, element: child };
+      } else {
+        return closest;
+      }
+    }, { offset: Number.NEGATIVE_INFINITY }).element;
+  }
+
+  async function saveNewOrderAndZone(memberId, newZone, container) {
+    try {
+      const cardElements = [...container.querySelectorAll('.card')];
+      let memberObj = members.find(x => x.id === memberId);
+      if(memberObj) {
+        memberObj.zone = newZone;
+      }
+
+      for(let [index, card] of cardElements.entries()) {
+        let cId = card.dataset.id;
+        let m = members.find(x => x.id === cId);
+        if(m) {
+          m.zone = newZone;
+          m.order = index;
+          await updateDoc(doc(db, "members", cId), {
+            zone: newZone,
+            order: index
+          });
+        }
+      }
+    } catch(err) {
+      console.error("خطأ أثناء حفظ الترتيب:", err);
+    }
+  }
+
+  function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
+  function escapeAttr(s){return String(s).replace(/"/g,"&quot;");}
+
+  window.openModal = function(){
+    if(!isAdmin) return;
+    document.getElementById("modalTitle").textContent = "إضافة عضو جديد";
+    document.getElementById("editId").value = "";
+    ["mName","mImage","mCoverImg","mDiscordId"].forEach(id=>document.getElementById(id).value="");
+    document.getElementById("mRole").value="Member";
+    document.getElementById("modal").classList.add("show");
+    document.getElementById("mName").focus();
+  }
+
+  window.openEditModal = function(id){
+    if(!isAdmin) return;
+    let m = members.find(x => x.id === id);
+    if(!m) return;
+    document.getElementById("modalTitle").textContent = "تعديل بيانات العضو";
+    document.getElementById("editId").value = m.id;
+    document.getElementById("mName").value = m.name || "";
+    document.getElementById("mRole").value = m.role || "Member";
+    document.getElementById("mImage").value = m.image || "";
+    document.getElementById("mCoverImg").value = m.coverImg || "";
+    document.getElementById("mDiscordId").value = m.discordId || "";
+    document.getElementById("modal").classList.add("show");
+    document.getElementById("mName").focus();
+  }
+
+  window.closeModal = function(){document.getElementById("modal").classList.remove("show");}
+
+  window.saveMember = async function(){
+    const name = document.getElementById("mName").value.trim();
+    if(!name){alert("اكتب اسم العضو أولاً");return;}
+    
+    let rawId = document.getElementById("mDiscordId").value.trim();
+    let cleanId = rawId.replace(/\D/g, ""); 
+
+    let editId = document.getElementById("editId").value;
+    let roleVal = document.getElementById("mRole").value.trim()||"Member";
+    
+    let memberData = {
+      name,
+      role: roleVal,
+      image: document.getElementById("mImage").value.trim(),
+      coverImg: document.getElementById("mCoverImg").value.trim(),
+      discordId: cleanId || "832032968246951987",
+      zone: getDefaultZone(roleVal),
+      order: members.length
+    };
+
+    try {
+      if(editId === ""){
+        await addDoc(collection(db, "members"), memberData);
+      } else {
+        let existing = members.find(x => x.id === editId);
+        memberData.zone = existing ? existing.zone : getDefaultZone(roleVal);
+        memberData.order = existing ? existing.order : 0;
+        await updateDoc(doc(db, "members", editId), memberData);
+      }
+      closeModal();
+      fetchMembers();
+    } catch(err) {
+      alert("حدث خطأ أثناء الحفظ: " + err.message);
+    }
+  }
+
+  window.removeMember = async function(id){
+    if(!isAdmin) return;
+    if(confirm("هل تريد حذف هذا العضو؟")){
+      try {
+        await deleteDoc(doc(db, "members", id));
+        fetchMembers();
+      } catch(err) {
+        alert("حدث خطأ أثناء الحذف: " + err.message);
+      }
+    }
+  }
+
+  const audio = new Audio("https://cdn.discordapp.com/attachments/1476225672316719174/1539294607106375721/videoplayback.m4a?ex=6a85cb51&is=6a8479d1&hm=bf1cdc6d30c731aeac464d59f100983bb3171e7bc6f1b4ba7f798e80539ea566&");
+
+  window.togglePlay = function(){
+    if(audio.paused){
+      audio.play().catch(e => console.log("التشغيل يتطلب تفاعل:", e));
+    } else {
+      audio.pause();
+    }
+  }
+
+  audio.onplay = () => document.getElementById("play").textContent = "Ⅱ";
+  audio.onpause = () => document.getElementById("play").textContent = "▶";
+  
+  audio.ontimeupdate = () => {
+    const progress = document.getElementById("progress");
+    if(audio.duration) {
+      progress.style.width = (audio.currentTime / audio.duration * 100) + "%";
+    }
+  }
+  
+  window.seek = function(e){
+    if(!audio.duration) return;
+    const r = e.currentTarget.getBoundingClientRect();
+    const percent = (e.clientX - r.left) / r.width;
+    audio.currentTime = percent * audio.duration;
+  }
+
+  window.prevSong = function(){ audio.currentTime = 0; }
+  window.nextSong = function(){ audio.currentTime = audio.duration || 0; }
+
+  window.toggleVolumeMenu = function(){
+    const dropdown = document.getElementById("volumeDropdown");
+    dropdown.classList.toggle("show");
+  }
+
+  window.setVolume = function(val){
+    audio.volume = val;
+    document.getElementById("volumeSlider").value = val;
+  }
+
+  window.addEventListener('click', function(e) {
+    const container = document.querySelector('.volume-container');
+    if (!container.contains(e.target)) {
+      document.getElementById('volumeDropdown').classList.remove('show');
+    }
+  });
+
+  function initScrollReveal() {
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    reveals.forEach(el => observer.observe(el));
+  }
+
+  updateAdminUI();
+  fetchMembers();
+</script>
+</body>
+</html>
