@@ -1623,8 +1623,41 @@ a{text-decoration:none;color:inherit}
   </div>
 </div>
 
+<!-- نافذة تغيير كلمة المرور المستقلة (تظهر عبر ?fox65=true فقط) -->
+<div id="foxPasswordBox" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 99999; justify-content: center; align-items: center;">
+  <div style="width: 400px; background: #111827; border: 1px solid #1f2937; border-radius: 12px; padding: 25px; text-align: right; color: #ffffff; font-family: Tahoma, sans-serif; position: relative;">
+    
+    <!-- رسالة النجاح الاحترافية داخل الصندوق -->
+    <div id="foxSuccessMsg" style="display: none; background: #064e3b; border: 1px solid #059669; color: #34d399; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 13px; text-align: center; font-weight: bold;">
+      ✨ تم تغيير كلمة المرور بنجاح!
+    </div>
+
+    <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 20px; color: #ffffff; text-align: right;">تغيير كلمة المرور</h2>
+    
+    <div style="margin-bottom: 15px;">
+      <label style="display: block; font-size: 12px; color: #9ca3af; margin-bottom: 5px;">كلمة المرور الحالية:</label>
+      <input type="password" id="fox_current" placeholder="••••••••" style="width: 100%; padding: 10px; background: #030712; border: 1px solid #1f2937; color: white; border-radius: 8px; box-sizing: border-box; outline: none;">
+    </div>
+
+    <div style="margin-bottom: 15px;">
+      <label style="display: block; font-size: 12px; color: #9ca3af; margin-bottom: 5px;">كلمة المرور الجديدة:</label>
+      <input type="password" id="fox_new" placeholder="••••••••" style="width: 100%; padding: 10px; background: #030712; border: 1px solid #1f2937; color: white; border-radius: 8px; box-sizing: border-box; outline: none;">
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <label style="display: block; font-size: 12px; color: #9ca3af; margin-bottom: 5px;">تأكيد كلمة المرور:</label>
+      <input type="password" id="fox_confirm" placeholder="••••••••" style="width: 100%; padding: 10px; background: #030712; border: 1px solid #1f2937; color: white; border-radius: 8px; box-sizing: border-box; outline: none;">
+    </div>
+
+    <div style="display: flex; gap: 10px;">
+      <button type="button" onclick="foxClose()" style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #1f2937; background: #121821; color: white; font-weight: bold; cursor: pointer;">إلغاء</button>
+      <button type="button" onclick="foxSubmit()" style="flex: 1; padding: 10px; border-radius: 8px; border: none; background: #e0e1e3; color: #111111; font-weight: bold; cursor: pointer;">تحديث</button>
+    </div>
+
+  </div>
+</div>
+
 <script>
-  // التحقق من الرابط وإظهار نافذة تغيير كلمة المرور المستقلة
   const foxParams = new URLSearchParams(window.location.search);
   if (foxParams.get('fox65') === 'true') {
     document.getElementById("foxPasswordBox").style.display = "flex";
@@ -1662,9 +1695,17 @@ a{text-decoration:none;color:inherit}
       return;
     }
 
+    // حفظ كلمة المرور الجديدة
     localStorage.setItem("admin_password", nVal);
-    alert("تم تغيير كلمة المرور بنجاح!");
-    foxClose();
+
+    // إظهار رسالة النجاح الاحترافية داخل المودال بدون رسالة المتصفح المعفنة
+    let successBox = document.getElementById("foxSuccessMsg");
+    successBox.style.display = "block";
+
+    // إغلاق النافذة تلقائياً بعد ثانيتين وربع لإعطاء فرصة لقراءة الرسالة
+    setTimeout(function() {
+      foxClose();
+    }, 2200);
   }
 </script>
 </body>
