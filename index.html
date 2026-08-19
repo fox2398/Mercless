@@ -464,58 +464,7 @@ a{text-decoration:none;color:inherit}
   .card{min-height:360px}.cover{height:120px}.musicTitle{display:none}
 }
 @media(max-width:480px){.members{grid-template-columns:1fr}.hero{display:block}.count{display:inline-block;margin-top:18px}}
-/* --- مؤشر التمرير ودائرة الماوس --- */
-.scroll-indicator {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  color: #00bcd4;
-  font-family: 'Cairo', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  z-index: 100;
-  pointer-events: none;
-}
-.mouse {
-  width: 26px;
-  height: 42px;
-  border: 2px solid #00bcd4;
-  border-radius: 20px;
-  position: relative;
-}
-.wheel {
-  width: 4px;
-  height: 8px;
-  background-color: #00bcd4;
-  border-radius: 2px;
-  position: absolute;
-  top: 6px;
-  left: 50%;
-  transform: translateX(-50%);
-  animation: scrollWheel 1.5s infinite;
-}
-@keyframes scrollWheel {
-  0% { top: 6px; opacity: 1; }
-  50% { top: 20px; opacity: 0; }
-  100% { top: 6px; opacity: 1; }
-}
-.cursor-follower {
-  position: fixed;
-  width: 40px;
-  height: 40px;
-  border: 2px solid rgba(0, 188, 212, 0.7);
-  border-radius: 50%;
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  transition: transform 0.08s ease-out;
-  z-index: 9999;
-  box-shadow: 0 0 12px rgba(0, 188, 212, 0.4);
-}</style>
+</style>
 </head>
 <body>
 
@@ -1140,34 +1089,6 @@ a{text-decoration:none;color:inherit}
 
   updateAdminUI();
   fetchMembers();
-</script>
-
-<div class="scroll-indicator">
-  <div class="mouse">
-    <div class="wheel"></div>
-  </div>
-  <span>مرر للأسفل</span>
-</div>
-
-<div class="cursor-follower"></div>
-
-<script>
-  const follower = document.querySelector('.cursor-follower');
-  let mouseX = 0, mouseY = 0, followerX = 0, followerY = 0;
-
-  window.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-  });
-
-  function animateCursor() {
-    followerX += (mouseX - followerX) * 0.15;
-    followerY += (mouseY - followerY) * 0.15;
-    follower.style.left = `${followerX}px`;
-    follower.style.top = `${followerY}px`;
-    requestAnimationFrame(animateCursor);
-  }
-  animateCursor();
 </script>
 </body>
 </html>
