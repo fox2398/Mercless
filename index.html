@@ -1252,7 +1252,7 @@ a{text-decoration:none;color:inherit}
     requestAnimationFrame(animateCursor);
   }
   animateCursor();
-</script>
+  </script>
 <!-- نافذة تغيير كلمة المرور المستقلة -->
 <div id="foxPasswordBox" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 999999; justify-content: center; align-items: center;">
   <div style="width: 400px; background: #111827; border: 1px solid #1f2937; border-radius: 12px; padding: 25px; text-align: right; color: #ffffff; font-family: Tahoma, sans-serif;">
@@ -1286,7 +1286,7 @@ a{text-decoration:none;color:inherit}
 
 <!-- تصميم تنبيه النجاح الاحترافي المنبثق -->
 <div id="foxToast" style="display: none; position: fixed; top: 30px; left: 50%; transform: translateX(-50%); background: #064e3b; border: 1px solid #059669; color: #34d399; padding: 15px 30px; border-radius: 10px; font-family: Tahoma, sans-serif; font-size: 14px; font-weight: bold; z-index: 1000000; box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: center;">
-   تم تغيير كلمة المرور بنجاح!
+    تم تغيير كلمة المرور بنجاح!
 </div>
 
 <script>
@@ -1304,14 +1304,18 @@ a{text-decoration:none;color:inherit}
     let c = document.getElementById("fox_current").value;
     let n = document.getElementById("fox_new").value;
     let a = document.getElementById("fox_confirm").value;
-    let real = localStorage.getItem("admin_password") || "67126712";
+    
+    // فحص جميع المفاتيح المحتملة لكلمة المرور القديمة عشان ما يصير فيه أي تضارب
+    let real = localStorage.getItem("admin_password") || localStorage.getItem("adminPass") || "67126712";
 
     if (!c || !n || !a) { showErr("الرجاء تعبئة جميع الحقول!"); return; }
     if (c !== real) { showErr("كلمة المرور الحالية غير صحيحة!"); return; }
     if (n !== a) { showErr("كلمة المرور الجديدة غير متطابقة مع التأكيد!"); return; }
     if (n.length < 6) { showErr("يجب أن تكون 6 خانات على الأقل!"); return; }
 
+    // حفظ كلمة المرور الجديدة في كل المفاتيح المحتملة بالمتصفح لضمان عملها مع أي زر تسجيل دخول
     localStorage.setItem("admin_password", n);
+    localStorage.setItem("adminPass", n);
     
     // إخفاء نافذة الإدخال وإظهار التنبيه الاحترافي
     document.getElementById("foxPasswordBox").style.display = "none";
