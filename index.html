@@ -481,6 +481,48 @@ a{text-decoration:none;color:inherit}
   <a href="https://discord.gg/xrVee3qxXp" target="_blank" class="login">ادخل الآن</a>
 </header>
 
+<style>
+  /* تنسيق روابط القائمة العلوية وتأثير التوهج بالأبيض عند مرور الماوس */
+  .navlinks a {
+    position: relative;
+    color: #a0aec0; /* اللون الافتراضي للكلمات */
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    font-family: 'Cairo', sans-serif;
+  }
+
+  /* تأثير التوهج والخلفية بالأبيض عند تمرير الماوس */
+  .navlinks a:hover, 
+  .navlinks a.active {
+    color: #ffffff; /* لون النص يصبح أبيض متوهج */
+    background-color: rgba(255, 255, 255, 0.08); /* خلفية بيضاء شفافة خفيفة */
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2); /* توهج أبيض خفيف حول الكلمة */
+  }
+
+  /* الخط الأبيض السفلي تحت الكلمة */
+  .navlinks a::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 60%;
+    height: 2px;
+    background-color: #ffffff;
+    border-radius: 2px;
+    transition: transform 0.3s ease;
+    box-shadow: 0 0 8px #ffffff; /* توهج الخط باللون الأبيض */
+  }
+
+  /* إظهار الخط السفلي عند مرور الماوس أو التفعيل */
+  .navlinks a:hover::after, 
+  .navlinks a.active::after {
+    transform: translateX(-50%) scaleX(1);
+  }
+</style>
+
 <section class="top-hero reveal">
   <div class="top-hero-logo-circle">
     <img src="https://cdn.discordapp.com/attachments/1539238546127192154/1539305147895910460/ChatGPT_Image_18_2026_07_49_41_.png?ex=6a85d522&is=6a8483a2&hm=837608e5d0e9215756a3d0fe281b97d83a3cd26845d6f8519a5f9ab6313641d9&" alt="Logo">
@@ -488,18 +530,32 @@ a{text-decoration:none;color:inherit}
   <div class="top-hero-sub"> TRIGGERS SERVER </div>
   <h1 class="top-hero-title"><span>Merciless</span> Gang</h1>
   <div class="top-hero-desc">تعرف على لاعبين ومسؤولين العصابه</div>
-  <div class="top-hero-buttons">
+  
+  <div class="hero-elements-wrapper" style="display: flex; flex-direction: column; align-items: center; gap: 30px; margin-top: 30px;">
+    <!-- زر الأعضاء -->
     <a href="#members-list" class="hero-btn-primary">الاعضاء</a>
     
-    <!-- مؤشر الماوس صار هنا تحت زر الاعضاء ولونه أبيض -->
-    <div class="scroll-indicator">
-      <div class="mouse">
-        <div class="wheel"></div>
+    <!-- مؤشر التمرير مع الحركة والأبيض -->
+    <div class="scroll-indicator" style="margin: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; color: #ffffff; font-family: 'Cairo', sans-serif; font-size: 14px; font-weight: 600; position: relative; z-index: 10; animation: floatIndicator 2s ease-in-out infinite;">
+      <div class="mouse" style="width: 26px; height: 42px; border: 2px solid #ffffff; border-radius: 20px; position: relative;">
+        <div class="wheel" style="width: 4px; height: 8px; background-color: #ffffff; border-radius: 2px; position: absolute; top: 6px; left: 50%; transform: translateX(-50%); animation: scrollWheel 1.5s infinite;"></div>
       </div>
       <span>مرر للأسفل</span>
     </div>
   </div>
 </section>
+
+<style>
+  @keyframes floatIndicator {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  @keyframes scrollWheel {
+    0% { top: 6px; opacity: 1; }
+    50% { top: 20px; opacity: 0; }
+    100% { top: 6px; opacity: 1; }
+  }
+</style>
 
 <section class="hero reveal" id="members">
   <div>
@@ -1100,7 +1156,7 @@ a{text-decoration:none;color:inherit}
 </script>
 
 <style>
-  /* تعديل مؤشر التمرير ليصير تحت زر الأعضاء ولونه أبيض */
+  /* مؤشر التمرير (أبيض) */
   .scroll-indicator {
     display: flex;
     flex-direction: column;
@@ -1139,21 +1195,41 @@ a{text-decoration:none;color:inherit}
     100% { top: 6px; opacity: 1; }
   }
   
-  /* دائرة الماوس صارت بيضاء */
+  /* دائرة الماوس (صغرتها من 40px إلى 30px) */
   .cursor-follower {
     position: fixed;
-    width: 40px;
-    height: 40px;
+    width: 30px;  /* كانت 40px */
+    height: 30px; /* كانت 40px */
     border: 2px solid rgba(255, 255, 255, 0.8);
     border-radius: 50%;
     pointer-events: none;
     transform: translate(-50%, -50%);
     transition: transform 0.08s ease-out;
     z-index: 9999;
-    box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.4); /* قللت الظل شوي عشان تتناسب مع الحجم */
   }
 </style>
 
 <div class="cursor-follower"></div>
+
+<!-- السكربت باقي زي ما هو -->
+<script>
+  const follower = document.querySelector('.cursor-follower');
+  let mouseX = 0, mouseY = 0, followerX = 0, followerY = 0;
+
+  window.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  function animateCursor() {
+    followerX += (mouseX - followerX) * 0.15;
+    followerY += (mouseY - followerY) * 0.15;
+    follower.style.left = `${followerX}px`;
+    follower.style.top = `${followerY}px`;
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+</script>
 </body>
 </html>
