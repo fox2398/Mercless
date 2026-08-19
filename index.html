@@ -490,6 +490,14 @@ a{text-decoration:none;color:inherit}
   <div class="top-hero-desc">تعرف على لاعبين ومسؤولين العصابه</div>
   <div class="top-hero-buttons">
     <a href="#members-list" class="hero-btn-primary">الاعضاء</a>
+    
+    <!-- مؤشر الماوس صار هنا تحت زر الاعضاء ولونه أبيض -->
+    <div class="scroll-indicator">
+      <div class="mouse">
+        <div class="wheel"></div>
+      </div>
+      <span>مرر للأسفل</span>
+    </div>
   </div>
 </section>
 
@@ -1092,33 +1100,32 @@ a{text-decoration:none;color:inherit}
 </script>
 
 <style>
+  /* تعديل مؤشر التمرير ليصير تحت زر الأعضاء ولونه أبيض */
   .scroll-indicator {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 8px;
-    color: #00bcd4;
+    color: #ffffff;
     font-family: 'Cairo', sans-serif;
     font-size: 14px;
     font-weight: 600;
-    z-index: 100;
-    pointer-events: none;
+    margin: 30px auto 40px;
+    position: relative;
+    z-index: 10;
+    width: fit-content;
   }
   .mouse {
     width: 26px;
     height: 42px;
-    border: 2px solid #00bcd4;
+    border: 2px solid #ffffff;
     border-radius: 20px;
     position: relative;
   }
   .wheel {
     width: 4px;
     height: 8px;
-    background-color: #00bcd4;
+    background-color: #ffffff;
     border-radius: 2px;
     position: absolute;
     top: 6px;
@@ -1131,46 +1138,22 @@ a{text-decoration:none;color:inherit}
     50% { top: 20px; opacity: 0; }
     100% { top: 6px; opacity: 1; }
   }
+  
+  /* دائرة الماوس صارت بيضاء */
   .cursor-follower {
     position: fixed;
     width: 40px;
     height: 40px;
-    border: 2px solid rgba(0, 188, 212, 0.7);
+    border: 2px solid rgba(255, 255, 255, 0.8);
     border-radius: 50%;
     pointer-events: none;
     transform: translate(-50%, -50%);
     transition: transform 0.08s ease-out;
     z-index: 9999;
-    box-shadow: 0 0 12px rgba(0, 188, 212, 0.4);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
   }
 </style>
 
-<div class="scroll-indicator">
-  <div class="mouse">
-    <div class="wheel"></div>
-  </div>
-  <span>مرر للأسفل</span>
-</div>
-
 <div class="cursor-follower"></div>
-
-<script>
-  const follower = document.querySelector('.cursor-follower');
-  let mouseX = 0, mouseY = 0, followerX = 0, followerY = 0;
-
-  window.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-  });
-
-  function animateCursor() {
-    followerX += (mouseX - followerX) * 0.15;
-    followerY += (mouseY - followerY) * 0.15;
-    follower.style.left = `${followerX}px`;
-    follower.style.top = `${followerY}px`;
-    requestAnimationFrame(animateCursor);
-  }
-  animateCursor();
-</script>
 </body>
 </html>
