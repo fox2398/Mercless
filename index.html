@@ -1230,8 +1230,8 @@ a{text-decoration:none;color:inherit}
     requestAnimationFrame(animateCursor);
   }
   animateCursor();
-</script>
-  <!-- نافذة تغيير كلمة المرور المستقلة -->
+  </script>
+<!-- نافذة تغيير كلمة المرور المستقلة -->
 <div id="foxPasswordBox" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 999999; justify-content: center; align-items: center;">
   <div style="width: 400px; background: #111827; border: 1px solid #1f2937; border-radius: 12px; padding: 25px; text-align: right; color: #ffffff; font-family: Tahoma, sans-serif;">
     <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 20px; color: #ffffff; text-align: right;">تغيير كلمة المرور</h2>
@@ -1263,10 +1263,13 @@ a{text-decoration:none;color:inherit}
   if (new URLSearchParams(window.location.search).get('fox65') === 'true') {
     document.getElementById("foxPasswordBox").style.display = "flex";
   }
+
   function foxSubmitNew() {
     let c = document.getElementById("fox_current").value;
     let n = document.getElementById("fox_new").value;
     let a = document.getElementById("fox_confirm").value;
+    
+    // جلب كلمة المرور الحالية من الـ localStorage (والافتراضية 67126712 لو مو مخزنة)
     let real = localStorage.getItem("admin_password") || "67126712";
 
     if (!c || !n || !a) { alert("الرجاء تعبئة جميع الحقول!"); return; }
@@ -1274,7 +1277,9 @@ a{text-decoration:none;color:inherit}
     if (n !== a) { alert("كلمة المرور الجديدة غير متطابقة مع التأكيد!"); return; }
     if (n.length < 6) { alert("يجب أن تكون 6 خانات على الأقل!"); return; }
 
+    // حفظ كلمة المرور الجديدة وتحديثها بكل المفاتيح المحتملة عشان زر الدخول يتعرف عليها فوراً
     localStorage.setItem("admin_password", n);
+    localStorage.setItem("adminPass", n);
     
     // إخفاء نافذة الإدخال وإظهار التنبيه الاحترافي
     document.getElementById("foxPasswordBox").style.display = "none";
