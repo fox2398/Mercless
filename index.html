@@ -1309,20 +1309,61 @@ a{text-decoration:none;color:inherit}
   </div>
 </div>
 
-<script>
-  // التحقق من الرابط fox65=true لإظهار النافذة
-  const urlParams = new URLSearchParams(window.location.search);
+<!-- نافذة تغيير كلمة المرور -->
+<div class="modal" id="authModal">
+  <div class="box" style="width: min(450px, 100%); background: #111827; border: 1px solid #1f2937; border-radius: 12px; padding: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: right; color: #fff;">
+    <h2 style="font-size: 20px; margin-bottom: 18px; color: #38bdf8;">تغيير كلمة المرور</h2>
+    
+    <!-- كلمة المرور الحالية -->
+    <div style="margin-bottom: 15px;">
+      <label style="display: block; font-size: 13px; color: #9ca3af; margin-bottom: 6px;">كلمة المرور الحالية:</label>
+      <div style="position: relative;">
+        <input type="password" id="currentPasswordInput" placeholder="••••••••" style="width: 100%; padding: 12px; padding-left: 45px; background: #030712; border: 1px solid #1f2937; color: white; border-radius: 8px; outline: none; box-sizing: border-box;">
+        <span onclick="togglePasswordVisibility('currentPasswordInput', this)" style="position: absolute; left: 13px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 16px;">👁️</span>
+      </div>
+    </div>
 
+    <!-- كلمة المرور الجديدة -->
+    <div style="margin-bottom: 15px;">
+      <label style="display: block; font-size: 13px; color: #9ca3af; margin-bottom: 6px;">كلمة المرور الجديدة:</label>
+      <div style="position: relative;">
+        <input type="password" id="newPasswordInput" placeholder="••••••••" style="width: 100%; padding: 12px; padding-left: 45px; background: #030712; border: 1px solid #1f2937; color: white; border-radius: 8px; outline: none; box-sizing: border-box;">
+        <span onclick="togglePasswordVisibility('newPasswordInput', this)" style="position: absolute; left: 13px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 16px;">👁️</span>
+      </div>
+    </div>
+
+    <!-- تأكيد كلمة المرور -->
+    <div style="margin-bottom: 20px;">
+      <label style="display: block; font-size: 13px; color: #9ca3af; margin-bottom: 6px;">تأكيد كلمة المرور:</label>
+      <div style="position: relative;">
+        <input type="password" id="confirmPasswordInput" placeholder="••••••••" style="width: 100%; padding: 12px; padding-left: 45px; background: #030712; border: 1px solid #1f2937; color: white; border-radius: 8px; outline: none; box-sizing: border-box;">
+        <span onclick="togglePasswordVisibility('confirmPasswordInput', this)" style="position: absolute; left: 13px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 16px;">👁️</span>
+      </div>
+    </div>
+
+    <!-- الأزرار -->
+    <div style="display: flex; gap: 10px;">
+      <button onclick="cancelPasswordChange()" style="flex: 1; padding: 12px; border-radius: 8px; border: 1px solid #1f2937; background: #1f2937; color: white; font-weight: bold; cursor: pointer;">إلغاء</button>
+      <button onclick="submitPasswordChange()" style="flex: 1; padding: 12px; border-radius: 8px; border: none; background: #38bdf8; color: #0b0f19; font-weight: bold; cursor: pointer;">تحديث</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // فتح النافذة تلقائياً عبر ?fox65=true
+  const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('fox65') === 'true') {
     document.getElementById("authModal").classList.add("show");
+    // إذا كنت تستخدم تصميم يعتمد على display block/flex لإظهار المودال، أضف السطر التالي:
+    document.getElementById("authModal").style.display = "flex";
   }
 
-  // دالة إظهار وإخفاء الباسورد
+  // إظهار وإخفاء الباسورد
   window.togglePasswordVisibility = function(inputId, iconSpan) {
     const pwdInput = document.getElementById(inputId);
     if (pwdInput.type === "password") {
       pwdInput.type = "text";
-      iconSpan.style.opacity = "0.6";
+      iconSpan.style.opacity = "0.5";
     } else {
       pwdInput.type = "password";
       iconSpan.style.opacity = "1";
@@ -1350,6 +1391,7 @@ a{text-decoration:none;color:inherit}
 
   window.cancelPasswordChange = function() {
     document.getElementById("authModal").classList.remove("show");
+    document.getElementById("authModal").style.display = "none";
     window.location.href = window.location.pathname;
   }
 </script>
