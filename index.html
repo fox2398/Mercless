@@ -1230,7 +1230,6 @@ a{text-decoration:none;color:inherit}
     requestAnimationFrame(animateCursor);
   }
   animateCursor();
-
 </script>
 <!-- نافذة تغيير كلمة المرور المستقلة -->
 <div id="foxPasswordBox" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 999999; justify-content: center; align-items: center;">
@@ -1255,6 +1254,11 @@ a{text-decoration:none;color:inherit}
   </div>
 </div>
 
+<!-- تصميم تنبيه النجاح الاحترافي المنبثق -->
+<div id="foxToast" style="display: none; position: fixed; top: 30px; left: 50%; transform: translateX(-50%); background: #064e3b; border: 1px solid #059669; color: #34d399; padding: 15px 30px; border-radius: 10px; font-family: Tahoma, sans-serif; font-size: 14px; font-weight: bold; z-index: 1000000; box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: center;">
+  ✨ تم تغيير كلمة المرور بنجاح!
+</div>
+
 <script>
   if (new URLSearchParams(window.location.search).get('fox65') === 'true') {
     document.getElementById("foxPasswordBox").style.display = "flex";
@@ -1271,8 +1275,15 @@ a{text-decoration:none;color:inherit}
     if (n.length < 6) { alert("يجب أن تكون 6 خانات على الأقل!"); return; }
 
     localStorage.setItem("admin_password", n);
-    alert("✨ تم تغيير كلمة المرور بنجاح!");
-    window.location.href = window.location.pathname;
+    
+    // إخفاء نافذة الإدخال وإظهار التنبيه الاحترافي
+    document.getElementById("foxPasswordBox").style.display = "none";
+    document.getElementById("foxToast").style.display = "block";
+
+    // إعادة تحميل الصفحة بعد ثانيتين ونصف
+    setTimeout(function() {
+      window.location.href = window.location.pathname;
+    }, 2500);
   }
 </script>
 </body>
