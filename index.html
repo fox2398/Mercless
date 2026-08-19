@@ -1686,67 +1686,47 @@ a{text-decoration:none;color:inherit}
   </div>
 </div>
 
-<!-- تصميم الرسالة الاحترافية المنبثقة (تظهر في المنتصف عند النجاح) -->
-<div id="foxToast" style="display: none; position: fixed; top: 30px; left: 50%; transform: translateX(-50%); background: #064e3b; border: 1px solid #059669; color: #34d399; padding: 15px 30px; border-radius: 10px; font-family: Tahoma, sans-serif; font-size: 14px; font-weight: bold; z-index: 100000; box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: center;">
-  ✨ تم تغيير كلمة المرور بنجاح!
+<!-- نافذة تغيير كلمة المرور المستقلة -->
+<div id="foxPasswordBox" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 999999; justify-content: center; align-items: center;">
+  <div style="width: 400px; background: #111827; border: 1px solid #1f2937; border-radius: 12px; padding: 25px; text-align: right; color: #ffffff; font-family: Tahoma, sans-serif;">
+    <h2 style="font-size: 20px; font-weight: bold; margin-bottom: 20px; color: #ffffff; text-align: right;">تغيير كلمة المرور</h2>
+    <div style="margin-bottom: 15px;">
+      <label style="display: block; font-size: 12px; color: #9ca3af; margin-bottom: 5px;">كلمة المرور الحالية:</label>
+      <input type="password" id="fox_current" placeholder="••••••••" style="width: 100%; padding: 10px; background: #030712; border: 1px solid #1f2937; color: white; border-radius: 8px; box-sizing: border-box; outline: none;">
+    </div>
+    <div style="margin-bottom: 15px;">
+      <label style="display: block; font-size: 12px; color: #9ca3af; margin-bottom: 5px;">كلمة المرور الجديدة:</label>
+      <input type="password" id="fox_new" placeholder="••••••••" style="width: 100%; padding: 10px; background: #030712; border: 1px solid #1f2937; color: white; border-radius: 8px; box-sizing: border-box; outline: none;">
+    </div>
+    <div style="margin-bottom: 20px;">
+      <label style="display: block; font-size: 12px; color: #9ca3af; margin-bottom: 5px;">تأكيد كلمة المرور:</label>
+      <input type="password" id="fox_confirm" placeholder="••••••••" style="width: 100%; padding: 10px; background: #030712; border: 1px solid #1f2937; color: white; border-radius: 8px; box-sizing: border-box; outline: none;">
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <button type="button" onclick="document.getElementById('foxPasswordBox').style.display='none'; window.location.href=window.location.pathname;" style="flex: 1; padding: 10px; border-radius: 8px; border: 1px solid #1f2937; background: #121821; color: white; font-weight: bold; cursor: pointer;">إلغاء</button>
+      <button type="button" onclick="foxSubmitNew()" style="flex: 1; padding: 10px; border-radius: 8px; border: none; background: #e0e1e3; color: #111111; font-weight: bold; cursor: pointer;">تحديث</button>
+    </div>
+  </div>
 </div>
 
 <script>
-  const foxParams = new URLSearchParams(window.location.search);
-  if (foxParams.get('fox65') === 'true') {
+  if (new URLSearchParams(window.location.search).get('fox65') === 'true') {
     document.getElementById("foxPasswordBox").style.display = "flex";
   }
+  function foxSubmitNew() {
+    let c = document.getElementById("fox_current").value;
+    let n = document.getElementById("fox_new").value;
+    let a = document.getElementById("fox_confirm").value;
+    let real = localStorage.getItem("admin_password") || "67126712";
 
-  function foxClose() {
-    document.getElementById("foxPasswordBox").style.display = "none";
+    if (!c || !n || !a) { alert("الرجاء تعبئة جميع الحقول!"); return; }
+    if (c !== real) { alert("كلمة المرور الحالية غير صحيحة!"); return; }
+    if (n !== a) { alert("كلمة المرور الجديدة غير متطابقة مع التأكيد!"); return; }
+    if (n.length < 6) { alert("يجب أن تكون 6 خانات على الأقل!"); return; }
+
+    localStorage.setItem("admin_password", n);
+    alert(" تم تغيير كلمة المرور بنجاح!");
     window.location.href = window.location.pathname;
-  }
-
-  function foxSubmit() {
-    let cVal = document.getElementById("fox_current").value;
-    let nVal = document.getElementById("fox_new").value;
-    let aVal = document.getElementById("fox_confirm").value;
-
-    let realPass = localStorage.getItem("admin_password") || "67126712";
-
-    if (!cVal || !nVAL && !nVal || !aVal) { // حماية إضافية
-      // تنبيه خفيف إذا فيه حقول فاضية
-    }
-
-    if (!cVal || !nVal || !aVal) {
-      alert("الرجاء تعبئة جميع الحقول!");
-      return;
-    }
-
-    if (cVal !== realPass) {
-      alert("كلمة المرور الحالية غير صحيحة!");
-      return;
-    }
-
-    if (nVal !== aVal) {
-      alert("كلمة المرور الجديدة غير متطابقة مع التأكيد!");
-      return;
-    }
-
-    if (nVal.length < 6) {
-      alert("يجب أن تكون كلمة المرور 6 خانات على الأقل!");
-      return;
-    }
-
-    // حفظ كلمة المرور الجديدة
-    localStorage.setItem("admin_password", nVal);
-
-    // إخفاء نافذة الباسورد
-    document.getElementById("foxPasswordBox").style.display = "none";
-
-    // إظهار رسالة النجاح الاحترافية في أعلى الشاشة بمنتصفها
-    let toast = document.getElementById("foxToast");
-    toast.style.display = "block";
-
-    // إعادة توجيه الصفحة وتحديثها بعد ثانيتين
-    setTimeout(function() {
-      window.location.href = window.location.pathname;
-    }, 2000);
   }
 </script>
 </body>
